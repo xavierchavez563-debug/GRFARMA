@@ -316,6 +316,32 @@
   }
 }
 
+/* Animación del carrito al agregar producto */
+@keyframes pulsoCarrito {
+  0%   { transform: scale(1) rotate(0); }
+  20%  { transform: scale(1.35) rotate(-12deg); }
+  40%  { transform: scale(1.35) rotate(12deg); }
+  60%  { transform: scale(1.2) rotate(-8deg); }
+  80%  { transform: scale(1.2) rotate(5deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.btn-carrito-animado {
+  animation: pulsoCarrito 0.7s ease;
+}
+
+/* El badge del contador también salta */
+@keyframes badgePop {
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  50%  { transform: translate(-50%, -50%) scale(1.6); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.badge-animado {
+  animation: badgePop 0.5s ease;
+}
+
+
 
 
   </style>
@@ -323,42 +349,61 @@
 <body>
 
   <!-- Navegación General -->
-  <nav class="navbar navbar-expand-lg bg-white shadow-sm mb-4">
-    <div class="container-fluid">
-      <h2 class="navbar-brand mb-0 h1 fw-bold text-purple">
-        <img src="logo.jpg" alt="GRFarma" style="height: 45px; width: auto;">
-         GRFarma
-      </h2>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-        <span class="navbar-toggler-icon"></span>
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm mb-4 px-3">
+  <div class="container-fluid">
+
+    <!-- Logo -->
+    <h2 class="navbar-brand mb-0 h1 fw-bold text-purple d-flex align-items-center gap-2">
+      <img src="logo.jpg" alt="GRFarma" style="height: 45px; width: auto;">
+      GRFarma
+    </h2>
+
+    <!-- Grupo derecho: carrito (SIEMPRE visible) + hamburguesa -->
+    <div class="d-flex align-items-center gap-3 order-lg-last">
+      <button class="btn btn-purple position-relative btn-carrito"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#carritoOffcanvas">
+        <i class="bi bi-cart3"></i>
+        <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
+              id="contadorCarrito">0</span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active fw-bold text-purple" href="#" id="linkInicio">INICIO</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-secondary" href="#" id="linkProductos">PRODUCTOS</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-secondary" href="#" id="linkContacto">CONTACTO</a>
-          </li>
-        </ul>
-
-        <div class="d-flex align-items-center gap-3">
-          <form class="d-flex" role="search" id="formBusqueda">
-            <input class="form-control me-2" type="search" placeholder="Buscar productos..." aria-label="Search" id="inputBuscar"/>
-            <button class="btn btn-outline-secondary" type="submit">Buscar</button>
-          </form>
-          <button class="btn btn-purple position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#carritoOffcanvas">
-            <i class="bi bi-cart3"></i>
-            <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" id="contadorCarrito">0</span>
-          </button>
-        </div>
-      </div>
+      <button class="navbar-toggler" type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-  </nav>
+
+    <!-- Menú colapsable (solo contiene nav links + buscador) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active fw-bold text-purple" href="#" id="linkInicio">INICIO</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-secondary" href="#" id="linkProductos">Productos</a>
+        </li>
+        <li class="nav-item">
+  <a class="nav-link text-secondary" href="#" id="linkContacto">Contacto</a>
+</li>
+      </ul>
+
+      <form class="d-flex" role="search" id="formBusqueda">
+        <input class="form-control me-2" type="search"
+               placeholder="Buscar en destacados..."
+               aria-label="Search"
+               id="inputBuscar"/>
+        <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+      </form>
+    </div>
+
+  </div>
+</nav>
 
   <!-- SECCIÓN 1: INICIO -->
   <section id="secInicio" class="seccion-pagina activa">
@@ -406,7 +451,7 @@
   <!-- SECCIÓN 3: PRODUCTOS (CARRUSEL EXCLUSIVO) -->
 <section id="secProductos" class="seccion-pagina">
   <div class="container carousel-container">
-    <h2 class="mb-4 text-center fw-bold text-purple">Nuestra Coleccion</h2>
+    <h2 class="mb-4 text-center fw-bold text-purple">Nuestros Productos</h2>
 
     <div id="carouselExampleAutoplaying" class="carousel slide shadow-sm rounded">
       <div class="carousel-inner" id="carruselInner"></div>
@@ -646,33 +691,46 @@
     const btnIrACatalogo = document.getElementById('btnIrACatalogo');
 
     function mostrarSeccion(seccion) {
-      secInicio.classList.remove('activa');
-      secDestacados.classList.remove('activa');
-      secProductos.classList.remove('activa');
-      secContacto.classList.remove('activa');
+  // Ocultar todas las secciones (con verificación de null)
+  [secInicio, secDestacados, secProductos, secContacto].forEach(s => {
+    if (s) s.classList.remove('activa');
+  });
 
-      linkInicio.classList.remove('active', 'fw-bold', 'text-purple');
-      linkProductos.classList.remove('active', 'fw-bold', 'text-purple');
-      linkContacto.classList.remove('active', 'fw-bold', 'text-purple');
+  // Quitar estilos activos de los links
+  [linkInicio, linkProductos, linkContacto].forEach(l => {
+    if (l) l.classList.remove('active', 'fw-bold', 'text-purple');
+  });
 
-      if (seccion === 'inicio') {
-        secInicio.classList.add('activa');
-        linkInicio.classList.add('active', 'fw-bold', 'text-purple');
-      } else if (seccion === 'destacados') {
-        secDestacados.classList.add('activa');
-      } else if (seccion === 'productos') {
-        secProductos.classList.add('activa');
-        linkProductos.classList.add('active', 'fw-bold', 'text-purple');
-      } else if (seccion === 'contacto') {
-        secContacto.classList.add('activa');
-        linkContacto.classList.add('active', 'fw-bold', 'text-purple');
-      }
-    }
+  // Mostrar la sección solicitada
+  if (seccion === 'inicio' && secInicio) {
+    secInicio.classList.add('activa');
+    if (linkInicio) linkInicio.classList.add('active', 'fw-bold', 'text-purple');
+  } else if (seccion === 'destacados' && secDestacados) {
+    secDestacados.classList.add('activa');
+  } else if (seccion === 'productos' && secProductos) {
+    secProductos.classList.add('activa');
+    if (linkProductos) linkProductos.classList.add('active', 'fw-bold', 'text-purple');
+  } else if (seccion === 'contacto' && secContacto) {
+    secContacto.classList.add('activa');
+    if (linkContacto) linkContacto.classList.add('active', 'fw-bold', 'text-purple');
+  }
+}
 
-    linkInicio.addEventListener('click', (e) => { e.preventDefault(); mostrarSeccion('inicio'); });
-    linkProductos.addEventListener('click', (e) => { e.preventDefault(); mostrarSeccion('productos'); });
-    linkContacto.addEventListener('click', (e) => { e.preventDefault(); mostrarSeccion('contacto'); });
-    btnIrACatalogo.addEventListener('click', () => mostrarSeccion('productos'));
+   if (linkInicio) {
+  linkInicio.addEventListener('click', (e) => { e.preventDefault(); mostrarSeccion('inicio'); });
+}
+
+if (linkProductos) {
+  linkProductos.addEventListener('click', (e) => { e.preventDefault(); mostrarSeccion('productos'); });
+}
+
+if (linkContacto) {
+  linkContacto.addEventListener('click', (e) => { e.preventDefault(); mostrarSeccion('contacto'); });
+}
+
+if (btnIrACatalogo) {
+  btnIrACatalogo.addEventListener('click', () => mostrarSeccion('productos'));
+}
 
     function renderCarrusel() {
       carruselInner.innerHTML = productosCarrusel.map((item, index) => `
@@ -797,6 +855,21 @@
       }
 
       mostrarCarrito();
+        
+    const btnCarritoAnim = document.querySelector('.btn-carrito');
+const badgeAnim = document.getElementById('contadorCarrito');
+
+if (btnCarritoAnim) {
+  btnCarritoAnim.classList.remove('btn-carrito-animado');
+  void btnCarritoAnim.offsetWidth;
+  btnCarritoAnim.classList.add('btn-carrito-animado');
+}
+
+if (badgeAnim) {
+  badgeAnim.classList.remove('badge-animado');
+  void badgeAnim.offsetWidth;
+  badgeAnim.classList.add('badge-animado');
+}
 
       if (abrirMenu) {
         const offcanvas = new bootstrap.Offcanvas(document.getElementById('carritoOffcanvas'));
@@ -859,19 +932,30 @@
     guardado = await window.guardarPedidoFirebase(pedido);
   }
 
-  if (guardado) {
-    alert(`✅ ¡Compra exitosa!\nTotal a pagar: Q${total.toFixed(2)}\n\n📦 Tu pedido fue registrado.\n¡Gracias por tu compra!`);
-  } else {
-    alert(`✅ Compra procesada\nTotal: Q${total.toFixed(2)}\n\n(No se pudo guardar en el servidor, pero tu pedido quedó registrado localmente)`);
-  }
-// Abrir WhatsApp con el resumen del pedido
-const numeroWhatsApp = "50238157611"; // Tu número sin el +
+  // 1. Armar mensaje de WhatsApp
+const numeroWhatsApp = "50242352546";
 const mensaje = encodeURIComponent(
   `🛒 *Nuevo Pedido - GRFarma*\n\n` +
   pedido.items.map(i => `• ${i.cantidad}x ${i.nombre} - Q${i.subtotal.toFixed(2)}`).join('\n') +
   `\n\n*Total:* Q${total.toFixed(2)}\n\n¡Gracias!`
 );
-window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
+const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
+
+// 2. Abrir WhatsApp PRIMERO (antes del alert, para no perder el gesto del usuario)
+window.location.href = urlWhatsApp;
+
+// 3. Mostrar confirmación después (con un pequeño retraso para que la redirección inicie)
+setTimeout(() => {
+  if (guardado) {
+    alert(`✅ ¡Compra exitosa!\nTotal: Q${total.toFixed(2)}\n\n📦 Tu pedido fue registrado.`);
+  } else {
+    alert(`✅ Compra procesada\nTotal: Q${total.toFixed(2)}`);
+  }
+  // 4. Limpiar el carrito
+  carrito = [];
+  mostrarCarrito();
+  localStorage.removeItem('grfarma_carrito');
+}, 300);
   // Limpiar el carrito
   carrito = [];
   mostrarCarrito();
