@@ -373,9 +373,35 @@
   animation: pulsoCarrito 0.5s ease;
 }
 
+#secInicio .lead {
+  font-weight: 500;
+  
+}
 
+.img-producto img,
+.carousel-item img {
+  mix-blend-mode: multiply;
+}
 
+.carousel-item img {
+  width: 100%;
+  height: 85%;      /* antes era 75% */
+  object-fit: contain;
+  padding: 10px;    /* antes era 20px */
+}
 
+.precio-editable {
+  cursor: pointer;
+  border-bottom: 1px dashed #d4af37;
+  padding: 0 2px;
+  transition: all 0.2s ease;
+}
+
+.precio-editable:hover {
+  background-color: rgba(212, 175, 55, 0.15);
+  color: #b8912c;
+  font-weight: 600;
+}
 
   </style>
 </head>
@@ -387,8 +413,8 @@
 
     <!-- Logo -->
     <h2 class="navbar-brand mb-0 h1 fw-bold text-purple d-flex align-items-center gap-2">
-      <img src="logo.jpg" alt="GRFarma" style="height: 45px; width: auto;">
-      GRFarma
+      <img src="logo.jpg" alt="GR Farma" style="height: 45px; width: auto;">
+      GR Farma
     </h2>
 
     <!-- Grupo derecho: carrito (SIEMPRE visible) + hamburguesa -->
@@ -434,7 +460,7 @@
   <section id="secInicio" class="seccion-pagina activa">
     <div class="container text-center my-5 py-5">
       <h1 class="display-3 fw-bold mb-3 text-purple">Tu salud es lo Primero</h1>
-      <p class="lead mb-4 text-secondary-subtitle">Descubre los productos de GRFarma para tu bienestar diario.</p>
+      <p class="lead mb-4 text-secondary-subtitle">Descubre los productos de GR Farma para tu bienestar diario.</p>
       <button class="btn btn-purple btn-lg shadow-sm" id="btnIrACatalogo">Ver Productos</button>
     </div>
 
@@ -563,10 +589,10 @@
           <span class="total-carrito text-purple" id="totalCarrito">Q0.00</span>
         </div>
         <button class="btn btn-purple w-100 fw-bold" id="btnComprar" disabled>
-          <i class="bi bi-credit-card"></i> Finalizar compra
+          <i class="bi bi-credit-card"></i> Finalizar Pedido
         </button>
         <button class="btn btn-outline-secondary w-100 mt-2" id="btnVaciar">
-          <i class="bi bi-trash3"></i> Vaciar carrito
+          <i class="bi bi-trash3"></i> Vaciar pedido
         </button>
       </div>
     </div>
@@ -624,10 +650,10 @@
 
     {
         id: 201,
-        nombre: 'Adidas Samba OG',
+        nombre: 'FOSFO-GIN',
         descripcion: 'La silueta icónica de cancha que conquistó la moda internacional.',
         precio: 165.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/GZ8477_352x352.jpg?v=1769098621'
+        imagen: 'img/fosfo-gin.png'
       },
       {
         id: 202,
@@ -645,10 +671,10 @@
       },
       {
       id: 204,
-        nombre: 'AIR FORCE 1',
+        nombre: 'TOSE-K',
         descripcion: 'El clásico atemporal del estilo urbano con cuero de máxima durabilidad.',
-        precio: 180.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/CW2288-111_d7d14a1e-9b6c-4b61-bd4e-2698b7bbade8_352x352.jpg?v=1752177484'
+        precio: 92.00,
+        imagen: 'img/tose-k.png'
       },
       {
         id: 205,
@@ -835,21 +861,27 @@ if (btnIrACatalogo) {
         cantidadTotal += item.cantidad;
 
         const div = document.createElement('div');
-        div.className = 'carrito-item';
-        div.innerHTML = `
-          <div class="info">
-            <div><strong>${item.nombre}</strong></div>
-            <div class="text-muted small">Q${item.precio.toFixed(2)} c/u</div>
-          </div>
-          <div class="cantidad-control">
-            <button class="btn-disminuir" data-index="${i}">−</button>
-            <span>${item.cantidad}</span>
-            <button class="btn-aumentar" data-index="${i}">+</button>
-          </div>
-          <div class="precio">Q${subtotal.toFixed(2)}</div>
-          <button class="eliminar-item" data-index="${i}">✕</button>
-        `;
-        listaCarrito.appendChild(div);
+div.className = 'carrito-item';
+div.innerHTML = `
+  <div class="info">
+    <div><strong>${item.nombre}</strong></div>
+    <div class="text-muted small">
+      <span class="precio-editable"
+            data-index="${i}"
+            title="Clic para editar precio">
+        Q${item.precio.toFixed(2)}
+      </span> c/u
+    </div>
+  </div>
+  <div class="cantidad-control">
+    <button class="btn-disminuir" data-index="${i}">−</button>
+    <span>${item.cantidad}</span>
+    <button class="btn-aumentar" data-index="${i}">+</button>
+  </div>
+  <div class="precio">Q${subtotal.toFixed(2)}</div>
+  <button class="eliminar-item" data-index="${i}">✕</button>
+`;
+listaCarrito.appendChild(div);
       }
 
       totalCarrito.textContent = `Q${total.toFixed(2)}`;
@@ -990,15 +1022,29 @@ setTimeout(() => {
   localStorage.removeItem('grfarma_carrito');
 }
 
-    listaCarrito.addEventListener('click', function(e) {
-      if (e.target.classList.contains('btn-disminuir')) {
-        cambiarCantidad(parseInt(e.target.dataset.index, 10), -1);
-      } else if (e.target.classList.contains('btn-aumentar')) {
-        cambiarCantidad(parseInt(e.target.dataset.index, 10), 1);
-      } else if (e.target.classList.contains('eliminar-item')) {
-        eliminarDelCarrito(parseInt(e.target.dataset.index, 10));
+   listaCarrito.addEventListener('click', function(e) {
+  if (e.target.classList.contains('btn-disminuir')) {
+    cambiarCantidad(parseInt(e.target.dataset.index, 10), -1);
+  } else if (e.target.classList.contains('btn-aumentar')) {
+    cambiarCantidad(parseInt(e.target.dataset.index, 10), 1);
+  } else if (e.target.classList.contains('eliminar-item')) {
+    eliminarDelCarrito(parseInt(e.target.dataset.index, 10));
+  } else if (e.target.classList.contains('precio-editable')) {
+    // Editar precio
+    const index = parseInt(e.target.dataset.index, 10);
+    const item = carrito[index];
+    const nuevoPrecio = prompt(`Edita el precio de "${item.nombre}":`, item.precio.toFixed(2));
+    if (nuevoPrecio !== null) {
+      const p = parseFloat(nuevoPrecio);
+      if (!isNaN(p) && p >= 0) {
+        item.precio = p;
+        mostrarCarrito();
+      } else {
+        alert('⚠️ Precio inválido.');
       }
-    });
+    }
+  }
+});
 
     btnVaciar.addEventListener('click', vaciarCarrito);
     btnComprar.addEventListener('click', finalizarCompra);
