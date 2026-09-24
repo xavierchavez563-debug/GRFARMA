@@ -315,15 +315,26 @@
     background-attachment: scroll;
   }
 }
+#contadorCarrito {
+  min-width: 20px;
+  padding: 3px 6px;
+  font-size: 0.68rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 /* Animación del carrito al agregar producto */
-@keyframes pulsoCarrito {
-  0%   { transform: scale(1) rotate(0); }
-  20%  { transform: scale(1.35) rotate(-12deg); }
-  40%  { transform: scale(1.35) rotate(12deg); }
-  60%  { transform: scale(1.2) rotate(-8deg); }
-  80%  { transform: scale(1.2) rotate(5deg); }
-  100% { transform: scale(1) rotate(0); }
+@keyframes badgePop {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.25); }
+}
+
+
+.badge-animado {
+  animation: badgePop 0.4s ease;
 }
 
 .btn-carrito-animado {
@@ -332,14 +343,36 @@
 
 /* El badge del contador también salta */
 @keyframes badgePop {
-  0%   { transform: translate(-50%, -50%) scale(1); }
-  50%  { transform: translate(-50%, -50%) scale(1.6); }
-  100% { transform: translate(-50%, -50%) scale(1); }
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
 }
 
 .badge-animado {
-  animation: badgePop 0.5s ease;
+  animation: badgePop 0.6s ease-out;
 }
+
+@keyframes pulsoCarrito {
+  0%   { transform: scale(1) rotate(0); }
+  25%  { transform: scale(1.12) rotate(-5deg); }
+  50%  { transform: scale(1.12) rotate(5deg); }
+  75%  { transform: scale(1.08) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.btn-carrito-animado {
+  animation: pulsoCarrito 0.5s ease;
+}
+
 
 
 
@@ -828,7 +861,8 @@ if (btnIrACatalogo) {
       }
 
       totalCarrito.textContent = `Q${total.toFixed(2)}`;
-      contadorCarrito.textContent = cantidadTotal;
+      // Limitar visualmente a "9+" cuando hay 10 o más
+      contadorCarrito.textContent = cantidadTotal > 9 ? '9+' : cantidadTotal;
     }
 
     function agregarAlCarrito(idProducto, origen = 'destacados', abrirMenu = false) {
@@ -933,7 +967,7 @@ if (badgeAnim) {
   }
 
   // 1. Armar mensaje de WhatsApp
-const numeroWhatsApp = "50238157611";
+const numeroWhatsApp = "50238157611"; 
 const mensaje = encodeURIComponent(
   `🛒 *Nuevo Pedido - GRFarma*\n\n` +
   pedido.items.map(i => `• ${i.cantidad}x ${i.nombre} - Q${i.subtotal.toFixed(2)}`).join('\n') +
