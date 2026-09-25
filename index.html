@@ -7,7 +7,7 @@
   <!-- Bootstrap CSS & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+  <link rel="icon" type="image/png" href="favicon.png?v=2">
   <style>
     :root {
       --color-primario: #ffffff;
@@ -128,17 +128,27 @@
       max-width: 900px;
       margin: 0 auto;
     }
+    
+
+    .carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  padding: 30px;
+  transition: transform 0.6s ease;
+  mix-blend-mode: multiply;
+}
+
 
     .carousel-item-wrapper {
-      position: relative;
-      width: 100%;
-      height: 480px;
-      background-color: #ffffff;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #e0e0e0;
-      
-    }
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
 
     /* Transición suave entre slides */
 .carousel-item {
@@ -155,13 +165,7 @@
   transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-    .carousel-item img {
-  width: 100%;
-  height: 75%;
-  object-fit: contain;
-  padding: 20px;
-  transition: transform 0.6s ease;
-}
+    
 
 .carousel-item:hover img {
   transform: scale(1.08);
@@ -203,6 +207,15 @@
     font-size: 0.8rem;
   }
 } 
+
+.carousel-inner {
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-item {
+  height: 100%;
+}
 
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
@@ -378,16 +391,21 @@
   
 }
 
-.img-producto img,
-.carousel-item img {
+.img-producto img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.5s ease;
   mix-blend-mode: multiply;
 }
 
 .carousel-item img {
   width: 100%;
-  height: 85%;      /* antes era 75% */
-  object-fit: contain;
-  padding: 10px;    /* antes era 20px */
+  height: 75%;           /* ← antes 100%, ahora 75% */
+  object-fit: contain !important;
+  padding: 30px;
+  transition: transform 0.6s ease;
+  mix-blend-mode: multiply;
 }
 
 .precio-editable {
@@ -646,79 +664,78 @@
     ];
 
     // 2. PRODUCTOS EXCLUSIVOS PARA EL CARRUSEL (SECCIÓN PRODUCTOS)
-    const productosCarrusel = [
-
-    {
-        id: 201,
-        nombre: 'FOSFO-GIN',
-        descripcion: 'La silueta icónica de cancha que conquistó la moda internacional.',
-        precio: 165.00,
-        imagen: 'img/fosfo-gin.png'
-      },
-      {
-        id: 202,
-        nombre: 'Puma Suede XL',
-        descripcion: 'Detalles sobredimensionados para dar un toque audaz a tu estilo.',
-        precio: 130.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/39520554_352x352.jpg?v=1771014166'
-      },
-      {
-        id: 203,
-        nombre: 'Puma Mostro',
-        descripcion: 'Diseño vanguardista y agresivo con agarre de alto rendimiento.',
-        precio: 120.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/39733020_352x352.jpg?v=1775662405'
-      },
-      {
-      id: 204,
-        nombre: 'TOSE-K',
-        descripcion: 'El clásico atemporal del estilo urbano con cuero de máxima durabilidad.',
-        precio: 92.00,
-        imagen: 'img/tose-k.png'
-      },
-      {
-        id: 205,
-        nombre: 'VEJA Campo',
-        descripcion: 'Diseño ecológico y minimalista para un Look versátil de diario.',
-        precio: 190.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/CP0501537_352x352.jpg?v=1766506003'
-      },
-      {
-        id: 206,
-        nombre: 'New Balance 530',
-        descripcion: 'Estética retro-running con tecnología de amortiguación moderna.',
-        precio: 155.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/U530SEA-D_352x352.jpg?v=1768934107'
-      },
-      {
-        id: 207,
-        nombre: 'Nike V5',
-        descripcion: 'Diseño vanguardista y agresivo con agarre de alto rendimiento.',
-        precio: 125.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/W_NIKE_V5_RNR__1_352x352.jpg?v=1784732279'
-      },
-      {
-        id: 208,
-        nombre: 'WMNS NIKE AIR MUSE',
-        descripcion: 'Diseño agresivo con un gran estilo.',
-        precio: 150.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/WMNS_AIRMAX_MUSE_3_v2_352x352.jpg?v=1783699181'
-      },
-      {
-        id: 209,
-        nombre: 'OTZO CLOG ',
-        descripcion: 'Diseño comodo y para uso diaro.',
-        precio: 120.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/UGG_clog_olive_v5_352x352.jpg?v=1783700379'
-      },
-      {
-        id: 210,
-        nombre: 'AIR JORDAN 1 MID ',
-        descripcion: 'Diseño clasico y llamativo.',
-        precio: 100.00,
-        imagen: 'https://meatpack.com/cdn/shop/files/DQ8426-403_352x352.jpg?v=1766857822'
-      }
-    ];
+   const productosCarrusel = [
+  {
+    id: 208,
+    nombre: 'DEXANEUROVAL',
+    descripcion: 'Diseño agresivo con un gran estilo.',
+    precio: 150.00,
+    imagen: 'img/dexa.png'
+  },
+  {
+    id: 206,
+    nombre: 'DOLONEUROVAL',
+    descripcion: 'Estética retro-running con tecnología de amortiguación moderna.',
+    precio: 25.00,
+    imagen: 'img/dolo.png'
+  },
+  {
+    id: 205,
+    nombre: 'NEUROVAL',
+    descripcion: 'Diseño ecológico y minimalista para un Look versátil de diario.',
+    precio: 20.00,
+    imagen: 'img/neuroval.png'
+  },
+  {
+    id: 204,
+    nombre: 'CEFTRIVAL',
+    descripcion: 'El clásico atemporal del estilo urbano con cuero de máxima durabilidad.',
+    precio: 92.00,
+    imagen: 'img/ceftrival.png'
+  },
+  {
+    id: 202,
+    nombre: 'TOSE-K',
+    descripcion: 'Detalles sobredimensionados para dar un toque audaz a tu estilo.',
+    precio: 30.00,
+    imagen: 'img/tose-k.png'
+  },
+  {
+    id: 203,
+    nombre: 'DICLOSEB-X',
+    descripcion: 'Diseño vanguardista y agresivo con agarre de alto rendimiento.',
+    precio: 120.00,
+    imagen: 'img/dicloseb.png'
+  },
+  {
+    id: 210,
+    nombre: 'DICLOSEB-GOTAS',
+    descripcion: 'Diseño clasico y llamativo.',
+    precio: 100.00,
+    imagen: 'img/diclogotas.png'
+  },
+  {
+    id: 207,
+    nombre: 'BYE-BYE FIEBRE',
+    descripcion: 'Diseño vanguardista y agresivo con agarre de alto rendimiento.',
+    precio: 125.00,
+    imagen: 'img/bye.png'
+  },
+  {
+    id: 209,
+    nombre: 'ESTOGASTRIX',
+    descripcion: 'Diseño comodo y para uso diaro.',
+    precio: 120.00,
+    imagen: 'img/gasto.png'
+  },
+  {
+    id: 201,
+    nombre: 'FOSFO-GIN',
+    descripcion: 'La silueta icónica de cancha que conquistó la moda internacional.',
+    precio: 165.00,
+    imagen: 'img/fosfo-gin.png'
+  }
+];
 
     let carrito = [];
 
